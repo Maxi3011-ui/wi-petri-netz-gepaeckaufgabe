@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gepäckaufgabe als Petri-Netz</title>
+<style>
+  :root {
+    --bg: #f4f6f9;
+    --karte: #ffffff;
+    --text: #15202b;
+    --leise: #5a6b7c;
+    --linie: #dde3ea;
+    --akzent: #0b5ea8;
+    --akzent-text: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10161d; --karte: #18212b; --text: #eef3f8; --leise: #9fb0c0;
+      --linie: #2a3744; --akzent: #4ea1ef; --akzent-text: #0b1620;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10161d; --karte: #18212b; --text: #eef3f8; --leise: #9fb0c0;
+    --linie: #2a3744; --akzent: #4ea1ef; --akzent-text: #0b1620;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 32px 16px 64px;
+  }
+  main { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 1.6rem; line-height: 1.25; margin: 0 0 4px; }
+  .unter { color: var(--leise); margin: 0 0 28px; }
+  .karte {
+    background: var(--karte); border: 1px solid var(--linie); border-radius: 14px;
+    padding: 20px; margin-bottom: 16px;
+  }
+  .karte h2 { font-size: 1.05rem; margin: 0 0 6px; }
+  .karte p { margin: 0 0 16px; color: var(--leise); }
+  a.knopf {
+    display: inline-block; background: var(--akzent); color: var(--akzent-text);
+    text-decoration: none; font-weight: 600; padding: 11px 18px; border-radius: 9px;
+  }
+  a.knopf:hover { filter: brightness(1.08); }
+  a.leise { color: var(--akzent); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.93rem; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--linie); }
+  th { color: var(--leise); font-weight: 600; }
+  td.zahl { text-align: right; white-space: nowrap; }
+  pre {
+    background: var(--bg); border: 1px solid var(--linie); border-radius: 9px;
+    padding: 12px; overflow-x: auto; font-size: 0.82rem; margin: 0 0 16px;
+  }
+  ol { margin: 0 0 8px; padding-left: 20px; }
+  footer { color: var(--leise); font-size: 0.85rem; text-align: center; margin-top: 32px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Gepäckaufgabe als Petri-Netz</h1>
+  <p class="unter">Wirtschaftsinformatik, Seite 27 – fertige Dateien für HPSim</p>
+
+  <div class="karte">
+    <h2>Das Netz aus dem Buch (M1)</h2>
+    <p>Passagiere, Schalterbereich, Gepäcklager, Flugzeug mit allen Kapazitäten und Zeiten wie abgebildet.</p>
+    <a class="knopf" href="dateien/gepaeckaufgabe.hps" download>gepaeckaufgabe.hps laden</a>
+  </div>
+
+  <div class="karte">
+    <h2>Die verbesserte Fassung</h2>
+    <p>Zweiter Check-in-Schalter, zweiter Verlader, Puffer von 5 auf 10 erhöht. Braucht nur halb so lange.</p>
+    <a class="knopf" href="dateien/gepaeckaufgabe-verbessert.hps" download>gepaeckaufgabe-verbessert.hps laden</a>
+  </div>
+
+  <div class="karte">
+    <h2>Öffnen</h2>
+    <ol>
+      <li>HPSim starten, dann <strong>Datei → Öffnen</strong>.</li>
+      <li>Die geladene <code>.hps</code>-Datei auswählen.</li>
+      <li>Simulation starten – die Marken laufen wie in M3 durch das Netz.</li>
+    </ol>
+    <p style="margin-bottom:0">Kein HPSim da? Dieselbe Datei öffnet ohne Installation im Browser auf
+      <a class="leise" href="https://hpsim.vercel.app" target="_blank" rel="noopener">hpsim.vercel.app</a>.</p>
+  </div>
+
+  <div class="karte">
+    <h2>Aufbau</h2>
+    <pre>Passagiere ──&gt; aufgeben ──&gt; Schalterbereich ──&gt; wiegen ──&gt; Gepäcklager ──&gt; verladen ──&gt; Flugzeug
+   50/50         2 ZE            0/5           1 ZE        0/50         5 ZE        0/50</pre>
+    <p style="margin-bottom:0">Oben Marken und Kapazität der Plätze, unten der Zeitbedarf. Alle Kanten haben Gewicht 1.</p>
+  </div>
+
+  <div class="karte">
+    <h2>Was die Simulation zeigt</h2>
+    <table>
+      <tr><th>Variante</th><th class="zahl">Dauer</th><th class="zahl">Ersparnis</th></tr>
+      <tr><td>Buchmodell</td><td class="zahl">253 ZE</td><td class="zahl">–</td></tr>
+      <tr><td>nur zweiter Schalter</td><td class="zahl">253 ZE</td><td class="zahl">0 %</td></tr>
+      <tr><td>nur zweiter Verlader</td><td class="zahl">130 ZE</td><td class="zahl">49 %</td></tr>
+      <tr><td>zweiter Schalter und Verlader</td><td class="zahl">129 ZE</td><td class="zahl">49 %</td></tr>
+      <tr><td>ein Schalter, drei Verlader</td><td class="zahl">106 ZE</td><td class="zahl">58 %</td></tr>
+    </table>
+    <p style="margin:16px 0 0">Der Engpass ist das Verladen mit 5 ZE je Stück. Ein zweiter Schalter
+      beschleunigt eine Station, die gar nicht bremst – und bringt deshalb nichts.</p>
+  </div>
+
+  <footer>
+    Lösungen zu den Aufgaben von Seite 26:
+    <a class="leise" href="https://github.com/Maxi3011-ui/wi-petri-netz-gepaeckaufgabe/blob/main/loesungen.md">loesungen.md</a>
+  </footer>
+</main>
+</body>
+</html>
